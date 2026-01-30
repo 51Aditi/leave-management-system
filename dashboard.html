@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5>Pending</h5>
+                <h2>{{ leave_counts.pending }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5>Approved</h5>
+                <h2>{{ leave_counts.approved }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h5>Rejected</h5>
+                <h2>{{ leave_counts.rejected }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5>Balances</h5>
+                <p>C:{{ current_user.casual_leave }} S:{{ current_user.sick_leave }} P:{{ current_user.paid_leave }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="{{ url_for('apply_leave') }}" class="btn btn-success btn-lg me-2">Apply Leave</a>
+        <a href="{{ url_for('leave_history') }}" class="btn btn-info btn-lg me-2">Leave History</a>
+        {% if current_user.role == 'manager' %}
+            <a href="{{ url_for('manager_dashboard') }}" class="btn btn-primary btn-lg me-2">Manager Panel</a>
+            <form method="POST" action="{{ url_for('reset_database') }}" style="display: inline-block;">
+                <button type="submit" class="btn btn-warning btn-lg" 
+                        onclick="return confirm('Reset ALL leaves and restore balances to 10/8/12?\nThis CANNOT be undone!')">
+                    Reset System
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

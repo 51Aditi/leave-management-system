@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Manager Approval Panel</h2>
+{% if pending_leaves %}
+    {% for leave in pending_leaves %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <strong>Leave {{ leave.id }} - {{ leave.user.username }}</strong>
+        </div>
+        <div class="card-body">
+            <p><strong>Type:</strong> {{ leave.leave_type.upper() }}</p>
+            <p><strong>Dates:</strong> {{ leave.start_date }} to {{ leave.end_date }}</p>
+            <p><strong>Reason:</strong> {{ leave.reason }}</p>
+            <div>
+                <button class="btn btn-success me-2" onclick="approve('{{ leave.id }}')">Approve</button>
+                <button class="btn btn-danger" onclick="reject('{{ leave.id }}')">Reject</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">No pending leave requests</div>
+{% endif %}
+
+<script>
+function approve(id) {
+    fetch('/approve/' + id, {method: 'POST'})
+    .then(() => location.reload());
+}
+function reject(id) {
+    if(confirm('Reject this leave?')) {
+        fetch('/reject/' + id, {method: 'POST'})
+        .then(() => location.reload());
+    }
+}
+</script>
+{% endblock %}
